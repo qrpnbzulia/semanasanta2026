@@ -128,65 +128,91 @@
 
     <!-- SCRIPT PRINCIPAL -->
     <script>
-        // --- CONFIGURACIÓN SUPABASE ---
-        const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
+     // --- CONFIGURACIÓN SUPABASE ---
+           const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqcHVrZnN4ZHVxdGdiaHRnaWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTI3MjcsImV4cCI6MjA5MDE4ODcyN30.whpdkHn0OjJHPxbzZjgEwsBD4tKtN-_hxN8VGtDW4SU';
-        
-        // ✅ Usamos 'supabaseClient' para evitar conflictos
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // 1. Cargar Contador de Visitas
-        async function cargarVisitas() {
-            let {  visitaData, error: visitError } = await supabaseClient
-                .from('contador_visitas')
-                .select('visitas')
-                .eq('id', 1)
-                .single();
-
-            if (visitError) {
-                document.getElementById('contador').innerText = "Eres el visitante #1,245"; 
-                return;
-            }
-
-            const nuevasVisitas = visitaData.visitas + 1;
-            await supabaseClient.from('contador_visitas').update({ visitas: nuevasVisitas }).eq('id', 1);
-            document.getElementById('contador').innerText = `Eres el visitante #${nuevasVisitas}`;
-        }
-
-        // 2. Manejar Envío del Formulario
-        document.getElementById('miFormulario').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.querySelector('button');
-            const errorMsg = document.getElementById('error-msg');
+    // 1. Cargar Contador de Visitas (usando función segura)
+    async function cargarVisitas() {
+        try {
+            // Llamar a la función que incrementa y devuelve el nuevo valor
+            const { data, error } = await supabaseClient
+                .rpc('incrementar_contador');
             
-            btn.innerText = "Enviando...";
-            btn.disabled = true;
-            errorMsg.style.display = 'none';
+            if (error) throw error;
+            
+            document.getElementById('contador').innerText = `Eres el visitante #${data}`;
+        } catch (err) {
+            console.error('Error en contador:', err);
+            // Fallback: mostrar número aleatorio si falla
+            const aleatorio = Math.floor(Math.random() * 500) + 1000;
+            document.getElementById('contador').innerText = `Eres el visitante #${aleatorio}`;
+        }
+    }
 
-            const nombre = document.getElementById('nombre').value;
-            const apellido = document.getElementById('apellido').value;
-            const cedula = document.getElementById('cedula').value;
+    // 2. Manejar Envío del Formulario
+    document.getElementById('miFormulario').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.querySelector('button');
+        const errorMsg = document.getElementById('error-msg');
+        
+        btn.innerText = "Enviando...";
+        btn.disabled = true;
+        errorMsg.style.display = 'none';
 
+        const nombre = document.getElementById('nombre').value;
+        const apellido = document.getElementById('apellido').value;
+        const cedula = document.getElementById('cedula').value;
+
+        try {
             const { data, error } = await supabaseClient
                 .from('participantes')
                 .insert([{ nombre, apellido, cedula }]);
 
             if (error) {
                 if (error.code === '23505') { 
-                    errorMsg.innerText = "Esta cédula ya ha sido registrada.";
+                    errorMsg.innerText = "⚠️ Esta cédula ya ha sido registrada.";
                     errorMsg.style.display = 'block';
                 } else {
-                    errorMsg.innerText = "Error al conectar. Intenta de nuevo.";
+                    console.error('Error Supabase:', error);
+                    errorMsg.innerText = "❌ Error de conexión. Verifica tu configuración.";
                     errorMsg.style.display = 'block';
                 }
                 btn.innerText = "ENVIAR";
                 btn.disabled = false;
             } else {
+                // ✅ ÉXITO
                 lanzarConfeti();
                 document.getElementById('formulario-section').classList.add('hidden');
                 document.getElementById('mensaje-exito').classList.remove('hidden');
             }
-        });
+        } catch (err) {
+            console.error('Error inesperado:', err);
+            errorMsg.innerText = "❌ Ocurrió un error inesperado.";
+            errorMsg.style.display = 'block';
+            btn.innerText = "ENVIAR";
+            btn.disabled = false;
+        }
+    });
+
+    // 3. Función de Confeti
+    function lanzarConfeti() {
+        var duration = 3 * 1000;
+        var animationEnd = Date.now() + duration;
+        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        var interval = setInterval(function() {
+            var timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+            var particleCount = 50 * (timeLeft / duration);
+            confetti(Object.assign({}, defaults, { 
+                particleCount, 
+                origin: { x: Math.random(), y: Math.random() - 0.2 } 
+            }));
+        }, 250);
+    }
 
         // 3. Función de Confeti
         function lanzarConfeti() {
