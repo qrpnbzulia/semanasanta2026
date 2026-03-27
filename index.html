@@ -8,387 +8,480 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: 
-                linear-gradient(135deg, rgba(0, 31, 63, 0.85) 0%, rgba(0, 116, 217, 0.85) 100%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFDC00' fill-opacity='0.08'%3E%3Cpath d='M30 0v25H25V0h5zm0 35v25h-5V35h5zM0 30h25v5H0v-5zm35 0h25v5H35v-5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
-                linear-gradient(180deg, rgba(0, 50, 100, 0.3) 0%, rgba(0, 100, 180, 0.2) 100%);
-            background-size: cover, 60px 60px, cover;
-            background-attachment: fixed;
-            color: white;
+            background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 50%, #1a3a5c 100%);
+            color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            margin: 0;
-            padding: 20px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
             position: relative;
-            overflow-x: hidden;
         }
 
-        body::before {
-            content: '✝️';
+        /* 🔵 BANNER SUPERIOR INSTITUCIONAL */
+        .banner-superior {
             position: fixed;
-            top: 10%;
-            left: 5%;
-            font-size: 3rem;
-            opacity: 0.15;
-            animation: flotar 6s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #0f2744 0%, #1a3a5c 50%, #0f2744 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            border-bottom: 3px solid #c9a959;
         }
 
-        body::after {
-            content: '🕊️';
-            position: fixed;
-            top: 15%;
-            right: 5%;
-            font-size: 3rem;
-            opacity: 0.15;
-            animation: flotar 8s ease-in-out infinite reverse;
-            pointer-events: none;
-            z-index: 0;
+        .banner-superior h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 1px;
         }
 
-        @keyframes flotar {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+        .banner-superior .separador {
+            color: #c9a959;
+            font-size: 1.2rem;
         }
 
-        .decoracion {
-            position: fixed;
-            font-size: 2.5rem;
-            opacity: 0.12;
-            pointer-events: none;
-            z-index: 0;
-            animation: flotar 7s ease-in-out infinite;
+        .banner-superior i {
+            color: #c9a959;
+            font-size: 1.3rem;
         }
-        .decoracion-1 { top: 25%; left: 8%; }
-        .decoracion-2 { top: 30%; right: 10%; }
-        .decoracion-3 { bottom: 20%; left: 10%; }
-        .decoracion-4 { bottom: 25%; right: 8%; }
 
+        /* Ajuste para el contenido */
+        body {
+            padding-top: 80px;
+        }
+
+        /* 📦 CONTENEDOR PRINCIPAL */
         .container {
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(15px);
-            padding: 35px;
-            border-radius: 25px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px 30px;
+            max-width: 480px;
             width: 100%;
-            border: 2px solid rgba(0, 150, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(201, 169, 89, 0.3);
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
 
-        /* 🔵 BORDE AZUL BRILLANTE */
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #0074D9, #00A8FF, #0074D9);
-            border-radius: 25px;
-            z-index: -1;
-            opacity: 0.7;
-            animation: bordeBrillante 3s ease-in-out infinite;
-        }
-        
-        @keyframes bordeBrillante {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 0.8; }
-        }
-
-        .logo {
-            width: 110px;
-            height: 110px;
-            background: linear-gradient(135deg, #0074D9 0%, #00A8FF 100%);
+        /* 🎖️ LOGO INSTITUCIONAL */
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 100%);
             border-radius: 50%;
             margin: 0 auto 25px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 50px;
-            font-weight: bold;
-            box-shadow: 0 0 30px rgba(0, 150, 255, 0.6);
-            border: 3px solid white;
-        }
-        
-        .felicidades-animado {
-            font-size: 3rem;
-            font-weight: 900;
-            margin: 15px 0 20px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-            animation: cambioColor 1.5s infinite alternate;
-            letter-spacing: 2px;
-        }
-        @keyframes cambioColor {
-            0% { color: #00A8FF; transform: scale(1); }
-            25% { color: #2ECC40; transform: scale(1.05); }
-            50% { color: #FF4136; transform: scale(1); }
-            75% { color: #FFDC00; transform: scale(1.05); }
-            100% { color: #0074D9; transform: scale(1); }
+            box-shadow: 0 5px 20px rgba(26, 58, 92, 0.4);
+            border: 4px solid #c9a959;
         }
 
-        h1 { font-size: 2rem; margin: 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-        h2 { font-size: 1.3rem; margin-bottom: 20px; font-weight: 400; }
-        
-        .subtitulo-premio {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin: 15px 0 10px;
-            color: #00A8FF;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        .logo-container i {
+            font-size: 55px;
+            color: #ffffff;
         }
-        
-        .semana-santa {
-            font-size: 1.1rem;
-            color: #2ECC40;
-            font-weight: 600;
-            display: block;
-            margin-top: 5px;
-        }
-        
-        .mensaje-cpnb {
-            font-size: 1rem;
-            margin: 20px 0 15px;
-            color: #fff;
-            line-height: 1.5;
-            padding: 15px;
-            background: rgba(0, 100, 180, 0.25);
+
+        /* 📊 CONTADOR */
+        .contador-visitas {
+            background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 100%);
+            color: #ffffff;
+            padding: 15px 25px;
             border-radius: 10px;
-            border: 1px solid rgba(0, 150, 255, 0.4);
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(26, 58, 92, 0.3);
         }
-        
-        .cpnb-title {
+
+        .contador-visitas span {
+            color: #c9a959;
             font-weight: 700;
-            color: #00A8FF;
+        }
+
+        /* 📝 TÍTULOS */
+        .titulo-principal {
+            color: #1a3a5c;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .subtitulo {
+            color: #4a5568;
             font-size: 1rem;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        /* 📋 FORMULARIO */
+        .formulario {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-grupo {
+            text-align: left;
+        }
+
+        .input-grupo label {
+            display: block;
+            color: #1a3a5c;
+            font-weight: 600;
             margin-bottom: 5px;
+            font-size: 0.9rem;
         }
 
-        input {
-            width: 90%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 2px solid rgba(0, 150, 255, 0.5);
-            font-size: 16px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            color: #001f3f;
-        }
-        input:focus {
-            outline: none;
-            border-color: #00A8FF;
-            box-shadow: 0 0 15px rgba(0, 150, 255, 0.6);
-        }
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] { -moz-appearance: textfield; }
-
-        button {
+        .input-grupo input {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #0074D9 0%, #00A8FF 100%);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
             border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 1rem;
+            color: #1a3a5c;
+            background: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .input-grupo input:focus {
+            outline: none;
+            border-color: #2c5282;
+            box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.1);
+        }
+
+        .input-grupo input::placeholder {
+            color: #a0aec0;
+        }
+
+        /* 🔘 BOTÓN */
+        .btn-enviar {
+            background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 100%);
+            color: #ffffff;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             margin-top: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(26, 58, 92, 0.3);
         }
-        button:hover { 
-            transform: scale(1.05); 
-            background: linear-gradient(135deg, #0066CC 0%, #0099EE 100%);
-            box-shadow: 0 0 25px rgba(0, 150, 255, 0.8);
+
+        .btn-enviar:hover {
+            background: linear-gradient(135deg, #2c5282 0%, #3a67a8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 58, 92, 0.4);
         }
-        button:disabled { 
-            background: linear-gradient(135deg, #666 0%, #444 100%); 
-            cursor: not-allowed; 
+
+        .btn-enviar:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        .social-icons {
-            margin-top: 20px;
-            font-size: 3rem;
+        /* ⚠️ MENSAJE DE ERROR */
+        .mensaje-error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid #feb2b2;
+        }
+
+        /* ✅ SECCIÓN DE ÉXITO */
+        .mensaje-exito {
+            display: none;
+        }
+
+        .felicidades {
+            color: #276749;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .numero-participante {
+            background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 100%);
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(26, 58, 92, 0.3);
+            border: 2px solid #c9a959;
+        }
+
+        .numero-participante span {
+            color: #c9a959;
+            font-size: 2rem;
+        }
+
+        .info-premio {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #c9a959;
+        }
+
+        .info-premio p {
+            color: #1a3a5c;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .info-premio .semana-santa {
+            color: #276749;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* 👮 MENSAJE INSTITUCIONAL */
+        .mensaje-institucional {
+            background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #ffffff;
+        }
+
+        .mensaje-institucional .titulo-cpnb {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #c9a959;
+        }
+
+        .mensaje-institucional p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* 🔗 REDES SOCIALES */
+        .redes-sociales {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
+            margin-top: 25px;
         }
-        .social-icons a {
-            color: white;
+
+        .redes-sociales a {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #1a3a5c 0%, #2c5282 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.5rem;
             transition: all 0.3s ease;
             text-decoration: none;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
-        }
-        .social-icons a:hover {
-            transform: scale(1.3) rotate(5deg);
-            filter: drop-shadow(0 0 15px rgba(0, 150, 255, 0.8));
-        }
-        .social-icons .instagram:hover { color: #E1306C; }
-        .social-icons .facebook:hover { color: #1877F2; }
-        .social-icons .tiktok:hover { color: #00f2ea; }
-
-        #formulario-section { display: block; }
-        #mensaje-exito { display: none; }
-        .hidden { display: none !important; }
-        .show { display: block !important; }
-        
-        .error-msg {
-            color: #ffcccc;
-            display: none;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            background: rgba(255, 65, 54, 0.3);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 85, 85, 0.5);
-        }
-        
-        .participante-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #2ECC40;
-            margin: 10px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            box-shadow: 0 3px 10px rgba(26, 58, 92, 0.3);
+            border: 2px solid transparent;
         }
 
-        /* 🔵 BANNER SUPERIOR AZUL */
-        .banner-semana-santa {
+        .redes-sociales a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(26, 58, 92, 0.5);
+        }
+
+        .redes-sociales a.instagram:hover {
+            background: linear-gradient(135deg, #833ab4, #e1306c, #f77737);
+            border-color: #e1306c;
+        }
+
+        .redes-sociales a.facebook:hover {
+            background: #1877f2;
+            border-color: #1877f2;
+        }
+
+        .redes-sociales a.tiktok:hover {
+            background: linear-gradient(135deg, #00f2ea, #ff0050);
+            border-color: #00f2ea;
+        }
+
+        /* 🎨 ELEMENTOS DECORATIVOS SUTILES */
+        .decoracion-fondo {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(90deg, rgba(0, 50, 100, 0.9), rgba(0, 100, 180, 0.9), rgba(0, 50, 100, 0.9));
-            padding: 12px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #00A8FF;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5), 0 0 10px rgba(0, 150, 255, 0.5);
-            z-index: 100;
-            border-bottom: 2px solid #00A8FF;
-            box-shadow: 0 2px 20px rgba(0, 100, 180, 0.5);
-        }
-        
-        .banner-semana-santa i {
-            margin: 0 12px;
-            animation: brillar 2s infinite;
-            color: #FFDC00;
-        }
-        
-        @keyframes brillar {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(0.9); }
+            font-size: 4rem;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 1;
+            color: #c9a959;
         }
 
-        body {
-            padding-top: 65px;
+        .decoracion-1 { top: 15%; left: 5%; }
+        .decoracion-2 { top: 20%; right: 5%; }
+        .decoracion-3 { bottom: 15%; left: 5%; }
+        .decoracion-4 { bottom: 20%; right: 5%; }
+
+        /* 📱 RESPONSIVE */
+        @media (max-width: 480px) {
+            .banner-superior h1 {
+                font-size: 1rem;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .logo-container {
+                width: 100px;
+                height: 100px;
+            }
+
+            .logo-container i {
+                font-size: 45px;
+            }
+
+            .felicidades {
+                font-size: 2rem;
+            }
+
+            .numero-participante {
+                font-size: 1.2rem;
+            }
+
+            .numero-participante span {
+                font-size: 1.5rem;
+            }
+
+            .redes-sociales a {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
         }
-        
-        .numero-badge {
-            background: linear-gradient(135deg, #0074D9, #00A8FF);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 25px;
-            font-weight: 700;
-            display: inline-block;
-            margin: 10px 0;
-            box-shadow: 0 0 20px rgba(0, 150, 255, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .numero-badge i {
-            margin-right: 8px;
-            color: #FFDC00;
+
+        /* 🎖️ DETALLE DORADO INSTITUCIONAL */
+        .detalle-dorado {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #c9a959, transparent);
+            margin: 15px auto;
         }
     </style>
 </head>
 <body>
 
-    <!-- 🔵 BANNER SUPERIOR AZUL -->
-    <div class="banner-semana-santa">
-        <i class="fas fa-cross"></i>
-        SEMANA SANTA 2026
-        <i class="fas fa-dove"></i>
-        ZULIA
-        <i class="fas fa-cross"></i>
+    <!-- 🔵 BANNER SUPERIOR INSTITUCIONAL -->
+    <div class="banner-superior">
+        <i class="fas fa-shield-alt"></i>
+        <h1>SEMANA SANTA 2026</h1>
+        <span class="separador">|</span>
+        <h1>ZULIA</h1>
+        <i class="fas fa-shield-alt"></i>
     </div>
 
-    <!-- ✨ Elementos decorativos -->
-    <div class="decoracion decoracion-1">🙏</div>
-    <div class="decoracion decoracion-2">✝️</div>
-    <div class="decoracion decoracion-3">🕯️</div>
-    <div class="decoracion decoracion-4">👑</div>
+    <!-- ✨ Elementos decorativos sutiles -->
+    <div class="decoracion-fondo decoracion-1">✝️</div>
+    <div class="decoracion-fondo decoracion-2">🕊️</div>
+    <div class="decoracion-fondo decoracion-3">🕯️</div>
+    <div class="decoracion-fondo decoracion-4">👑</div>
 
+    <!-- 📦 CONTENEDOR PRINCIPAL -->
     <div class="container">
-        <!-- LOGO -->
-        <div class="logo">
+        <!-- 🎖️ LOGO -->
+        <div class="logo-container">
             <i class="fas fa-shield-alt"></i>
         </div>
 
-        <!-- CONTADOR DE VISITAS -->
-        <h1 id="contador">Eres el visitante #...</h1>
+        <!-- 📊 CONTADOR DE VISITAS -->
+        <div class="contador-visitas">
+            Eres el visitante <span id="contador">#...</span>
+        </div>
 
-        <!-- SECCIÓN DEL FORMULARIO -->
+        <!-- 📝 SECCIÓN DEL FORMULARIO -->
         <div id="formulario-section">
-            <h2>Llena el formulario y participa por grandes premios</h2>
+            <h2 class="titulo-principal">Participa por Grandes Premios</h2>
+            <div class="detalle-dorado"></div>
+            <p class="subtitulo">Completa tus datos y forma parte del sorteo de Semana Santa 2026</p>
             
-            <form id="miFormulario">
-                <input type="text" id="nombre" placeholder="Nombre" required maxlength="50">
-                <input type="text" id="apellido" placeholder="Apellido" required maxlength="50">
-                <input type="number" id="cedula" placeholder="Cédula (8 dígitos)" required maxlength="8" pattern="\d{8}" title="Ingresa exactamente 8 dígitos numéricos">
-                <button type="submit" id="btnEnviar">ENVIAR</button>
+            <form id="miFormulario" class="formulario">
+                <div class="input-grupo">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" placeholder="Ingresa tu nombre" required maxlength="50">
+                </div>
+                
+                <div class="input-grupo">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" placeholder="Ingresa tu apellido" required maxlength="50">
+                </div>
+                
+                <div class="input-grupo">
+                    <label for="cedula">Cédula de Identidad</label>
+                    <input type="number" id="cedula" placeholder="8 dígitos sin puntos ni guiones" required maxlength="8" pattern="\d{8}" title="Ingresa exactamente 8 dígitos numéricos">
+                </div>
+                
+                <button type="submit" id="btnEnviar" class="btn-enviar">
+                    <i class="fas fa-paper-plane"></i> Enviar Registro
+                </button>
             </form>
-            <p id="error-msg" class="error-msg"></p>
+            
+            <p id="error-msg" class="mensaje-error"></p>
         </div>
 
         <!-- ✅ SECCIÓN DE ÉXITO -->
-        <div id="mensaje-exito" class="hidden">
-            <!-- 🌈 FELICITACIONES animado -->
-            <div class="felicidades-animado">¡FELICITACIONES!</div>
-            
-            <!-- 🔢 Número de participante -->
-            <p class="participante-number" id="numero-participante">Eres el participante #...</p>
-            
-            <!-- 🎫 Badge azul -->
-            <div class="numero-badge">
-                <i class="fas fa-ticket-alt"></i> Tu número ha sido guardado
+        <div id="mensaje-exito" class="mensaje-exito">
+            <div class="felicidades">
+                <i class="fas fa-check-circle"></i><br>¡Felicitaciones!
             </div>
             
-            <!-- 🎁 Subtítulo de premios -->
-            <p class="subtitulo-premio">
-                🎁 Estás participando por grandes premios
-                <span class="semana-santa">esta Semana Santa 2026</span>
-            </p>
+            <div class="detalle-dorado"></div>
             
-            <!-- 👮 Mensaje del CPNB Zulia -->
-            <div class="mensaje-cpnb">
-                <p class="cpnb-title">El Cuerpo de Policía Nacional Bolivariana<br>del Estado Zulia</p>
-                <p>te invita a seguirnos en nuestras redes</p>
+            <div class="numero-participante">
+                <i class="fas fa-ticket-alt"></i><br>
+                Eres el Participante <span id="numero-participante">#...</span>
             </div>
             
-            <!-- 🔗 Logos de redes sociales -->
-            <div class="social-icons">
+            <div class="info-premio">
+                <p>🎁 Estás participando por grandes premios</p>
+                <p class="semana-santa">Semana Santa 2026</p>
+            </div>
+            
+            <div class="mensaje-institucional">
+                <p class="titulo-cpnb">
+                    <i class="fas fa-shield-alt"></i> CPNB ZULIA
+                </p>
+                <p>El Cuerpo de Policía Nacional Bolivariana del Estado Zulia te invita a seguirnos en nuestras redes sociales oficiales</p>
+            </div>
+            
+            <div class="redes-sociales">
                 <a href="https://instagram.com/TU_USUARIO" target="_blank" class="instagram" title="Instagram">
                     <i class="fab fa-instagram"></i>
                 </a>
                 <a href="https://facebook.com/TU_USUARIO" target="_blank" class="facebook" title="Facebook">
-                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-facebook-f"></i>
                 </a>
                 <a href="https://tiktok.com/@TU_USUARIO" target="_blank" class="tiktok" title="TikTok">
                     <i class="fab fa-tiktok"></i>
@@ -399,22 +492,20 @@
 
     <script>
         // ========================================
-        // ⚙️ CONFIGURACIÓN - EDITA ESTO
+        // ⚙️ CONFIGURACIÓN SUPABASE
         // ========================================
-        const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co';
-        const SUPABASE_KEY = 'TU_CLAVE_ANON_AQUI'; // ✅ Pega tu clave anon REAL aquí
+               const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqcHVrZnN4ZHVxdGdiaHRnaWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTI3MjcsImV4cCI6MjA5MDE4ODcyN30.whpdkHn0OjJHPxbzZjgEwsBD4tKtN-_hxN8VGtDW4SU';
         
-        // ========================================
-        // 🚀 INICIALIZACIÓN
-        // ========================================
         let supabaseClient;
         let contadorActual = 0;
 
+        // Inicializar cliente
         try {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            console.log('✅ Cliente Supabase creado');
+            console.log('✅ Cliente Supabase inicializado');
         } catch (e) {
-            console.error('❌ Error creando cliente Supabase:', e);
+            console.error('❌ Error inicializando Supabase:', e);
         }
 
         // ========================================
@@ -432,21 +523,21 @@
 
                 contadorActual = (data?.visitas || 0) + 1;
                 
-                const { error: updateError } = await supabaseClient
+                await supabaseClient
                     .from('contador_visitas')
                     .update({ visitas: contadorActual })
                     .eq('id', 1);
 
-                if (updateError) throw updateError;
-
-                document.getElementById('contador').innerText = `Eres el visitante #${contadorActual}`;
+                document.getElementById('contador').innerText = `#${contadorActual}`;
+                document.getElementById('numero-participante').innerText = `#${contadorActual}`;
                 
-                console.log('✅ Contador actualizado:', contadorActual);
+                console.log('✅ Contador:', contadorActual);
                 
             } catch (err) {
                 console.error('❌ Error en contador:', err);
                 contadorActual = Math.floor(Math.random() * 500) + 1000;
-                document.getElementById('contador').innerText = `Eres el visitante #${contadorActual}`;
+                document.getElementById('contador').innerText = `#${contadorActual}`;
+                document.getElementById('numero-participante').innerText = `#${contadorActual}`;
             }
         }
 
@@ -460,13 +551,14 @@
             const errorMsg = document.getElementById('error-msg');
             const btn = document.getElementById('btnEnviar');
             
+            // Validar cédula (8 dígitos)
             if (!/^\d{8}$/.test(cedula)) {
-                errorMsg.innerText = "⚠️ La cédula debe tener exactamente 8 dígitos numéricos.";
+                errorMsg.innerText = "⚠️ La cédula debe tener exactamente 8 dígitos numéricos";
                 errorMsg.style.display = 'block';
                 return;
             }
             
-            btn.innerText = "Enviando...";
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             btn.disabled = true;
             errorMsg.style.display = 'none';
 
@@ -474,9 +566,6 @@
             const apellido = document.getElementById('apellido').value.trim();
 
             try {
-                console.log('📤 Enviando datos a Supabase...');
-                console.log('🔢 Número de participante:', contadorActual);
-                
                 const { data, error } = await supabaseClient
                     .from('participantes')
                     .insert([{ 
@@ -488,36 +577,28 @@
                     .select();
 
                 if (error) {
-                    console.error('❌ Error Supabase:', error);
-                    
                     if (error.code === '23505') { 
                         errorMsg.innerText = "⚠️ Esta cédula ya está registrada. ¡Gracias por participar!";
                     } else {
                         errorMsg.innerText = `❌ Error: ${error.message || 'Intenta nuevamente'}`;
                     }
                     errorMsg.style.display = 'block';
-                    btn.innerText = "ENVIAR";
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Registro';
                     btn.disabled = false;
                 } else {
-                    console.log('✅ Registro exitoso:', data);
-                    console.log('✅ Número de participante guardado:', contadorActual);
-                    
+                    // ✅ ÉXITO
                     lanzarConfeti();
                     
-                    document.getElementById('numero-participante').innerText = `Eres el participante #${contadorActual}`;
-                    
-                    document.getElementById('formulario-section').classList.add('hidden');
                     document.getElementById('formulario-section').style.display = 'none';
-                    document.getElementById('mensaje-exito').classList.remove('hidden');
                     document.getElementById('mensaje-exito').style.display = 'block';
                     
-                    console.log('✅ Pantalla de éxito mostrada');
+                    console.log('✅ Registro exitoso - Participante #', contadorActual);
                 }
             } catch (err) {
-                console.error('❌ Error inesperado:', err);
-                errorMsg.innerText = "❌ Ocurrió un error. Revisa tu conexión.";
+                console.error('❌ Error:', err);
+                errorMsg.innerText = "❌ Ocurrió un error. Verifica tu conexión.";
                 errorMsg.style.display = 'block';
-                btn.innerText = "ENVIAR";
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Registro';
                 btn.disabled = false;
             }
         });
@@ -526,7 +607,7 @@
         // 🎉 CONFETI
         // ========================================
         function lanzarConfeti() {
-            const duration = 3 * 1000;
+            const duration = 2500;
             const animationEnd = Date.now() + duration;
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
@@ -536,14 +617,13 @@
                 const particleCount = 50 * (timeLeft / duration);
                 confetti(Object.assign({}, defaults, { 
                     particleCount, 
-                    origin: { x: Math.random(), y: Math.random() - 0.2 } 
+                    origin: { x: Math.random(), y: Math.random() - 0.2 },
+                    colors: ['#1a3a5c', '#2c5282', '#c9a959', '#ffffff']
                 }));
             }, 250);
         }
 
-        // ========================================
-        // 🔄 INICIAR
-        // ========================================
+        // Iniciar
         if (supabaseClient) {
             cargarVisitas();
         }
