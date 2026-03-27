@@ -40,15 +40,37 @@ border: 1px solid rgba(255, 255, 255, 0.18);
 .logo {
 width: 100px;
 height: 100px;
-background-color: transparent;  
+background-color: transparent;
 border-radius: 50%;
 margin: 0 auto 20px;
 display: flex;
 align-items: center;
 justify-content: center;
-color: #001f3f;
-font-size: 40px;
+color: #ffffff;
+font-size: 50px;
 font-weight: bold;
+}
+/* ✅ NUEVO ESTILO PARA EL CONTADOR DE VISITAS */
+.contador-container {
+margin: 20px 0 25px;
+padding: 20px;
+background: rgba(255, 255, 255, 0.1);
+border-radius: 15px;
+border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.contador-texto {
+font-size: 1.1rem;
+color: #ffffff;
+margin-bottom: 10px;
+font-weight: 400;
+}
+.contador-numero {
+font-size: 3.5rem;
+font-weight: 900;
+color: #FFDC00;
+text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+margin: 0;
+line-height: 1;
 }
 /* 🌈 Animación de colores para FELICITACIONES */
 .felicidades-animado {
@@ -91,7 +113,6 @@ padding: 15px;
 background: rgba(255, 255, 255, 0.1);
 border-radius: 10px;
 }
-/* ✅ CAMBIO: CPNB en MAYÚSCULAS y BLANCO */
 .cpnb-title {
 font-weight: 700;
 color: #ffffff;
@@ -169,20 +190,21 @@ font-weight: 700;
 color: #2ECC40;
 margin: 10px 0;
 }
-/* ✅ OCULTAR contador de visitantes */
-#contador {
-display: none;
-}
 </style>
 </head>
 <body>
 <div class="container">
 <!-- LOGO -->
 <div class="logo">
-<img src="https://raw.githubusercontent.com/qrpnbzulia/semanasanta2026/main/LOGO-PNB.png" alt="Logo CPNB Zulia" style="width: 80px; height: 80px; object-fit: contain;">
+<i class="fas fa-shield-alt"></i>
 </div>
-<!-- CONTADOR DE VISITAS (OCULTO) -->
-<h1 id="contador">Eres el visitante #...</h1>
+
+<!-- ✅ CONTADOR DE VISITAS (NUEVO FORMATO) -->
+<div class="contador-container">
+<p class="contador-texto">Eres el visitante número:</p>
+<h1 class="contador-numero" id="contador">...</h1>
+</div>
+
 <!-- SECCIÓN DEL FORMULARIO -->
 <div id="formulario-section">
 <h2>Llena el formulario y participa por grandes premios</h2>
@@ -194,25 +216,21 @@ display: none;
 </form>
 <p id="error-msg" class="error-msg"></p>
 </div>
+
 <!-- ✅ SECCIÓN DE ÉXITO -->
 <div id="mensaje-exito" class="hidden">
-<!-- 🌈 FELICITACIONES animado y GRANDE -->
 <div class="felicidades-animado">¡FELICITACIONES!</div>
-<!-- 🔢 Número de participante -->
 <p class="participante-number" id="numero-participante">Eres el participante #...</p>
-<!-- 🎁 Subtítulo de premios -->
 <p class="subtitulo-premio">
 🎁 Estás participando por grandes premios
 <span class="semana-santa">esta Semana Santa 2026</span>
 </p>
-<!-- 👮 Mensaje del CPNB Zulia -->
 <div class="mensaje-cpnb">
 <p class="cpnb-title">El Cuerpo de Policía Nacional Bolivariana<br>del Estado Zulia</p>
 <p>te invita a seguirnos en nuestras redes</p>
 </div>
-<!-- 🔗 Logos de redes sociales -->
 <div class="social-icons">
-<a href="https://www.instagram.com/cpnb.redipoccidental?utm_source=qr&igsh=MWllczFmODF1ZWk5eA%3D%3D" target="_blank" class="instagram" title="Instagram">
+<a href="https://instagram.com/TU_USUARIO" target="_blank" class="instagram" title="Instagram">
 <i class="fab fa-instagram"></i>
 </a>
 <a href="https://facebook.com/TU_USUARIO" target="_blank" class="facebook" title="Facebook">
@@ -224,6 +242,7 @@ display: none;
 </div>
 </div>
 </div>
+
 <script>
 // ========================================
 // ⚙️ CONFIGURACIÓN - EDITA ESTO
@@ -258,13 +277,13 @@ const { error: updateError } = await supabaseClient
 .update({ visitas: contadorActual })
 .eq('id', 1);
 if (updateError) throw updateError;
-// Actualizar SOLO la pantalla de formulario
-document.getElementById('contador').innerText = `Eres el visitante #${contadorActual}`;
+// ✅ Actualizar el contador con el nuevo formato
+document.getElementById('contador').innerText = contadorActual;
 console.log('✅ Contador actualizado:', contadorActual);
 } catch (err) {
 console.error('❌ Error en contador:', err);
 contadorActual = Math.floor(Math.random() * 500) + 1000;
-document.getElementById('contador').innerText = `Eres el visitante #${contadorActual}`;
+document.getElementById('contador').innerText = contadorActual;
 }
 }
 // ========================================
