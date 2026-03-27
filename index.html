@@ -6,7 +6,7 @@
     <title>Gran Sorteo</title>
     <!-- Librería para el Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Librería de Supabase -->
+    <!-- Librería de Supabase (Solo una vez) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Iconos para redes sociales -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -40,7 +40,7 @@
         .logo {
             width: 100px;
             height: 100px;
-            background-color: white; /* Reemplaza esto con tu imagen si tienes URL */
+            background-color: white;
             border-radius: 50%;
             margin: 0 auto 20px;
             display: flex;
@@ -102,7 +102,7 @@
     <div class="container">
         <!-- LOGO -->
         <div class="logo">
-            <i class="fas fa-gift"></i> <!-- Icono de regalo como logo temporal -->
+            <i class="fas fa-gift"></i>
         </div>
 
         <!-- CONTADOR DE VISITAS -->
@@ -135,19 +135,17 @@
         </div>
     </div>
 
+    <!-- ÚNICO BLOQUE DE SCRIPT -->
     <script>
         // --- CONFIGURACIÓN ---
-        const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqcHVrZnN4ZHVxdGdiaHRnaWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTI3MjcsImV4cCI6MjA5MDE4ODcyN30.whpdkHn0OjJHPxbzZjgEwsBD4tKtN-_hxN8VGtDW4SU';
+        const SUPABASE_URL = 'TU_URL_DE_SUPABASE'; 
+        const SUPABASE_KEY = 'TU_KEY_DE_SUPABASE';
+        
+        // Declaramos la variable una sola vez
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // 1. Cargar Contador de Visitas
         async function cargarVisitas() {
-            // Incrementar visitas
-            const { data, error } = await supabase.rpc('incrementar_visitas'); 
-            // Nota: Para simplificar, haremos un select y luego un update manual en este ejemplo básico
-            // O usamos una lógica simple de lectura
-            
             let { data: visitaData, error: visitError } = await supabase
                 .from('contador_visitas')
                 .select('visitas')
@@ -155,7 +153,6 @@
                 .single();
 
             if (visitError) {
-                // Si falla, mostramos un número aleatorio alto para que se vea bien
                 document.getElementById('contador').innerText = "Eres el visitante #1,245"; 
                 return;
             }
@@ -188,7 +185,7 @@
 
             if (error) {
                 // Si hay error, revisamos si es por cédula duplicada
-                if (error.code === '23505') { // Código de error de clave única en Postgres
+                if (error.code === '23505') { 
                     errorMsg.innerText = "Esta cédula ya ha sido registrada.";
                     errorMsg.style.display = 'block';
                 } else {
