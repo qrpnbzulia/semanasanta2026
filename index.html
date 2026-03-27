@@ -199,14 +199,13 @@ margin: 10px 0;
 <i class="fas fa-shield-alt"></i>
 </div>
 
-<!-- ✅ CONTADOR DE VISITAS (SOLO en formulario) -->
+<!-- ✅ CONTADOR DE VISITAS (DENTRO del formulario-section para que se oculte) -->
+<div id="formulario-section">
 <div class="contador-container">
 <p class="contador-texto">Eres el visitante número:</p>
 <h1 class="contador-numero" id="contador">...</h1>
 </div>
 
-<!-- SECCIÓN DEL FORMULARIO -->
-<div id="formulario-section">
 <h2>Llena el formulario y participa por grandes premios</h2>
 <form id="miFormulario">
 <input type="text" id="nombre" placeholder="Nombre" required maxlength="50">
@@ -220,7 +219,6 @@ margin: 10px 0;
 <!-- ✅ SECCIÓN DE ÉXITO (SIN "visitante número") -->
 <div id="mensaje-exito" class="hidden">
 <div class="felicidades-animado">¡FELICITACIONES!</div>
-<!-- ✅ Solo muestra "participante #", NO "visitante número" -->
 <p class="participante-number" id="numero-participante">Eres el participante #...</p>
 <p class="subtitulo-premio">
 🎁 Estás participando por grandes premios
@@ -278,7 +276,6 @@ const { error: updateError } = await supabaseClient
 .update({ visitas: contadorActual })
 .eq('id', 1);
 if (updateError) throw updateError;
-// ✅ Actualizar SOLO el número (sin texto adicional)
 document.getElementById('contador').innerText = contadorActual;
 console.log('✅ Contador actualizado:', contadorActual);
 } catch (err) {
@@ -295,7 +292,6 @@ e.preventDefault();
 const cedula = document.getElementById('cedula').value.trim();
 const errorMsg = document.getElementById('error-msg');
 const btn = document.getElementById('btnEnviar');
-// Validar cédula: exactamente 8 dígitos
 if (!/^\d{8}$/.test(cedula)) {
 errorMsg.innerText = "⚠️ La cédula debe tener exactamente 8 dígitos numéricos.";
 errorMsg.style.display = 'block';
@@ -324,13 +320,12 @@ btn.innerText = "ENVIAR";
 btn.disabled = false;
 } else {
 console.log('✅ Registro exitoso');
-// 🎉 ÉXITO: Confeti
 lanzarConfeti();
-// ✅ Solo muestra "participante #", NO "visitante número"
 document.getElementById('numero-participante').innerText = `Eres el participante #${contadorActual}`;
-// ✅ OCULTAR formulario y MOSTRAR mensaje de éxito
+// ✅ OCULTAR todo el formulario-section (incluye el contador)
 document.getElementById('formulario-section').classList.add('hidden');
 document.getElementById('formulario-section').style.display = 'none';
+// ✅ MOSTRAR mensaje de éxito
 document.getElementById('mensaje-exito').classList.remove('hidden');
 document.getElementById('mensaje-exito').style.display = 'block';
 console.log('✅ Pantalla de éxito mostrada');
