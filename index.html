@@ -12,7 +12,7 @@ body {
 background-color: #001f3f;
 background-image: 
 linear-gradient(135deg, rgba(0, 31, 63, 0.9) 0%, rgba(0, 116, 217, 0.9) 100%),
-url("data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='2'%3E%3Cpath d='M50 30v40M30 50h40'/%3E%3Cpath d='M150 20v60M120 50h60'/%3E%3Cpath d='M250 40v50M225 65h50'/%3E%3Cpath d='M60 140c0 15-15 25-15 40s15 15 15 30'/%3E%3Cpath d='M160 150c8-8 22-8 30 0'/%3E%3Cpath d='M260 130l12-24 12 24'/%3E%3Cpath d='M40 220v50M15 245h50'/%3E%3Cpath d='M140 210v60M110 240h60'/%3E%3Cpath d='M240 220v50M215 245h50'/%3E%3C/g%3E%3C/svg%3E");
+url("image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='2'%3E%3Cpath d='M50 30v40M30 50h40'/%3E%3Cpath d='M150 20v60M120 50h60'/%3E%3Cpath d='M250 40v50M225 65h50'/%3E%3Cpath d='M60 140c0 15-15 25-15 40s15 15 15 30'/%3E%3Cpath d='M160 150c8-8 22-8 30 0'/%3E%3Cpath d='M260 130l12-24 12 24'/%3E%3Cpath d='M40 220v50M15 245h50'/%3E%3Cpath d='M140 210v60M110 240h60'/%3E%3Cpath d='M240 220v50M215 245h50'/%3E%3C/g%3E%3C/svg%3E");
 background-size: cover, 300px 300px;
 background-position: center, 0 0;
 background-attachment: fixed;
@@ -50,7 +50,7 @@ color: #ffffff;
 font-size: 50px;
 font-weight: bold;
 }
-
+/* ✅ CONTADOR DE VISITAS (Solo en formulario) */
 .contador-container {
 margin: 20px 0 25px;
 padding: 20px;
@@ -196,10 +196,10 @@ margin: 10px 0;
 <div class="container">
 <!-- LOGO -->
 <div class="logo">
-<img src="https://raw.githubusercontent.com/qrpnbzulia/semanasanta2026/main/LOGO-PNB.png" alt="Logo CPNB Zulia" style="width: 80px; height: 80px; object-fit: contain;">
+<i class="fas fa-shield-alt"></i>
 </div>
 
-<!-- ✅ CONTADOR DE VISITAS (NUEVO FORMATO) -->
+<!-- ✅ CONTADOR DE VISITAS (SOLO en formulario) -->
 <div class="contador-container">
 <p class="contador-texto">Eres el visitante número:</p>
 <h1 class="contador-numero" id="contador">...</h1>
@@ -217,9 +217,10 @@ margin: 10px 0;
 <p id="error-msg" class="error-msg"></p>
 </div>
 
-<!-- ✅ SECCIÓN DE ÉXITO -->
+<!-- ✅ SECCIÓN DE ÉXITO (SIN "visitante número") -->
 <div id="mensaje-exito" class="hidden">
 <div class="felicidades-animado">¡FELICITACIONES!</div>
+<!-- ✅ Solo muestra "participante #", NO "visitante número" -->
 <p class="participante-number" id="numero-participante">Eres el participante #...</p>
 <p class="subtitulo-premio">
 🎁 Estás participando por grandes premios
@@ -277,7 +278,7 @@ const { error: updateError } = await supabaseClient
 .update({ visitas: contadorActual })
 .eq('id', 1);
 if (updateError) throw updateError;
-// ✅ Actualizar el contador con el nuevo formato
+// ✅ Actualizar SOLO el número (sin texto adicional)
 document.getElementById('contador').innerText = contadorActual;
 console.log('✅ Contador actualizado:', contadorActual);
 } catch (err) {
@@ -325,7 +326,7 @@ btn.disabled = false;
 console.log('✅ Registro exitoso');
 // 🎉 ÉXITO: Confeti
 lanzarConfeti();
-// ✅ Actualizar el número de participante con el MISMO contador
+// ✅ Solo muestra "participante #", NO "visitante número"
 document.getElementById('numero-participante').innerText = `Eres el participante #${contadorActual}`;
 // ✅ OCULTAR formulario y MOSTRAR mensaje de éxito
 document.getElementById('formulario-section').classList.add('hidden');
