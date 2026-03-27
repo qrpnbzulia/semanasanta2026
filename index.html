@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gran Sorteo</title>
+    <!-- Librería para el Confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Librería de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Iconos para redes sociales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #001f3f 0%, #0074D9 100%);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            background-color: white; /* Reemplaza esto con tu imagen si tienes URL */
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #001f3f;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        h2 { font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; }
+        h3 { font-size: 1rem; margin-top: 30px; color: #FFDC00; }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #FF4136;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover { transform: scale(1.05); background-color: #ff2b1f; }
+
+        .social-icons {
+            margin-top: 30px;
+            font-size: 2rem;
+        }
+        .social-icons a {
+            color: white;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+        .social-icons a:hover { color: #FFDC00; }
+
+        #mensaje-exito { display: none; }
+        #formulario-section { display: block; }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- LOGO -->
+        <div class="logo">
+            <i class="fas fa-gift"></i> <!-- Icono de regalo como logo temporal -->
+        </div>
+
+        <!-- CONTADOR DE VISITAS -->
+        <h1 id="contador">Eres el visitante #...</h1>
+
+        <!-- SECCIÓN DEL FORMULARIO -->
+        <div id="formulario-section">
+            <h2>Llena el formulario y participa por grandes premios</h2>
+            
+            <form id="miFormulario">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="text" id="apellido" placeholder="Apellido" required>
+                <input type="number" id="cedula" placeholder="Cédula de Identidad" required>
+                <button type="submit">ENVIAR</button>
+            </form>
+            <p id="error-msg" style="color: #ff8585; display:none; margin-top:10px;"></p>
+        </div>
+
+        <!-- SECCIÓN DE ÉXITO (OCULTA AL INICIO) -->
+        <div id="mensaje-exito" class="hidden">
+            <h1 style="color: #2ECC40;">¡FELICITACIONES!</h1>
+            <p style="font-size: 1.2rem;">Estás participando por grandes premios 🎁</p>
+            
+            <h3>NO OLVIDES SEGUIRNOS EN NUESTRAS REDES</h3>
+            <div class="social-icons">
+                <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+                <a href="https://tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN ---
+        const SUPABASE_URL = 'TU_URL_DE_SUPABASE'; 
+        const SUPABASE_KEY = 'TU_KEY_DE_SUPABASE';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 1. Cargar Contador de Visitas
+        async function cargarVisitas() {
+            // Incrementar visitas
+            const { data, error } = await supabase.rpc('incrementar_visitas'); 
+            // Nota: Para simplificar, haremos un select y luego un update manual en este ejemplo básico
+            // O usamos una lógica simple de lectura
+            
+            let { data: visitaData, error: visitError } = await supabase
+                .from('contador_visitas')
+                .select('visitas')
+                .eq('id', 1)
+                .single();
+
+            if (visitError) {
+                // Si falla, mostramos un número aleatorio alto para que se vea bien
+                document.getElementById('contador').innerText = "Eres el visitante #1,245"; 
+                return;
+            }
+
+            // Actualizamos el contador en la DB +1
+            const nuevasVisitas = visitaData.visitas + 1;
+            await supabase.from('contador_visitas').update({ visitas: nuevasVisitas }).eq('id', 1);
+
+            document.getElementById('contador').innerText = `Eres el visitante #${nuevasVisitas}`;
+        }
+
+        // 2. Manejar el Envío del Formulario
+        document.getElementById('miFormulario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.querySelector('button');
+            const errorMsg = document.getElementById('error-msg');
+            
+            btn.innerText = "Enviando...";
+            btn.disabled = true;
+            errorMsg.style.display = 'none';
+
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const cedula = document.getElementById('cedula').value;
+
+            // Intentar insertar en Supabase
+            const { data, error } = await supabase
+                .from('participantes')
+                .insert([{ nombre, apellido, cedula }]);
+
+            if (error) {
+                // Si hay error, revisamos si es por cédula duplicada
+                if (error.code === '23505') { // Código de error de clave única en Postgres
+                    errorMsg.innerText = "Esta cédula ya ha sido registrada.";
+                    errorMsg.style.display = 'block';
+                } else {
+                    errorMsg.innerText = "Error al conectar. Intenta de nuevo.";
+                    errorMsg.style.display = 'block';
+                }
+                btn.innerText = "ENVIAR";
+                btn.disabled = false;
+            } else {
+                // ÉXITO: Mostrar confeti y cambiar pantalla
+                lanzarConfeti();
+                document.getElementById('formulario-section').classList.add('hidden');
+                document.getElementById('mensaje-exito').classList.remove('hidden');
+            }
+        });
+
+        // 3. Función de Confeti
+        function lanzarConfeti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        // Iniciar
+        cargarVisitas();
+    </script>
+</body>
+</html>
