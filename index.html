@@ -68,27 +68,15 @@ h1 {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
 }
 
-/* ✨ SUBTÍTULO LLAMATIVO MEJORADO */
+/* ✨ SUBTÍTULO BLANCO Y GRUESO */
 h2 { 
-    font-size: 1.4rem; 
+    font-size: 1.5rem; 
     margin: 25px 0 30px; 
-    font-weight: 700;
-    background: linear-gradient(90deg, #FFDC00, #FFA500, #FFDC00);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: brilloSubtitulo 3s linear infinite;
-    text-shadow: 0 0 20px rgba(255, 220, 0, 0.5);
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
     padding: 15px 20px;
-    border: 2px solid rgba(255, 220, 0, 0.3);
-    border-radius: 15px;
-    background-color: rgba(255, 220, 0, 0.05);
-}
-
-@keyframes brilloSubtitulo {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
+    line-height: 1.4;
 }
 
 .subtitulo-premio {
@@ -192,27 +180,6 @@ button:disabled { background-color: #999; cursor: not-allowed; transform: none; 
     color: #2ECC40;
     margin: 10px 0;
 }
-
-/* 🎁 Iconos decorativos alrededor del subtítulo */
-.subtitulo-iconos {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 25px 0 30px;
-}
-
-.subtitulo-iconos i {
-    font-size: 1.5rem;
-    color: #FFDC00;
-    animation: rotarIcono 4s linear infinite;
-}
-
-@keyframes rotarIcono {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(10deg); }
-    75% { transform: rotate(-10deg); }
-}
 </style>
 </head>
 <body>
@@ -227,12 +194,8 @@ button:disabled { background-color: #999; cursor: not-allowed; transform: none; 
 
     <!-- SECCIÓN DEL FORMULARIO -->
     <div id="formulario-section">
-        <!-- ✨ SUBTÍTULO MEJORADO CON ICONOS -->
-        <div class="subtitulo-iconos">
-            <i class="fas fa-gift"></i>
-            <h2>Llena el formulario y participa por grandes premios</h2>
-            <i class="fas fa-trophy"></i>
-        </div>
+        <!-- ✨ SUBTÍTULO BLANCO Y GRUESO -->
+        <h2>Llena el formulario y participa por grandes premios</h2>
 
         <form id="miFormulario">
             <input type="text" id="nombre" placeholder="Nombre" required maxlength="50">
@@ -388,9 +351,12 @@ document.getElementById('miFormulario').addEventListener('submit', async (e) => 
             // ✅ Actualizar el número de participante
             document.getElementById('numero-participante').innerText = `Eres el participante #${contadorActual}`;
             
-            // ✅ OCULTAR formulario y MOSTRAR mensaje de éxito
+            // ✅ OCULTAR contador de visitas y formulario
+            document.getElementById('contador').style.display = 'none';
             document.getElementById('formulario-section').classList.add('hidden');
             document.getElementById('formulario-section').style.display = 'none';
+            
+            // ✅ MOSTRAR mensaje de éxito
             document.getElementById('mensaje-exito').classList.remove('hidden');
             document.getElementById('mensaje-exito').style.display = 'block';
             
