@@ -8,8 +8,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* 🕊️ FONDO TEMÁTICO SEMANA SANTA */
         body {
-            background: linear-gradient(135deg, #001f3f 0%, #0074D9 100%);
+            background: 
+                /* Capa superior: degradado azul policial */
+                linear-gradient(135deg, rgba(0, 31, 63, 0.85) 0%, rgba(0, 116, 217, 0.85) 100%),
+                /* Capa media: patrón de cruces */
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFDC00' fill-opacity='0.08'%3E%3Cpath d='M30 0v25H25V0h5zm0 35v25h-5V35h5zM0 30h25v5H0v-5zm35 0h25v5H35v-5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+                /* Capa inferior: degradado morado Semana Santa */
+                linear-gradient(180deg, rgba(75, 0, 130, 0.3) 0%, rgba(138, 43, 226, 0.2) 100%);
+            background-size: cover, 60px 60px, cover;
+            background-attachment: fixed;
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
@@ -20,29 +29,95 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        /* ✨ Elementos decorativos flotantes */
+        body::before {
+            content: '✝️';
+            position: fixed;
+            top: 10%;
+            left: 5%;
+            font-size: 3rem;
+            opacity: 0.15;
+            animation: flotar 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '🕊️';
+            position: fixed;
+            top: 15%;
+            right: 5%;
+            font-size: 3rem;
+            opacity: 0.15;
+            animation: flotar 8s ease-in-out infinite reverse;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes flotar {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Elementos decorativos adicionales */
+        .decoracion {
+            position: fixed;
+            font-size: 2.5rem;
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+            animation: flotar 7s ease-in-out infinite;
+        }
+        .decoracion-1 { top: 25%; left: 8%; content: '🙏'; }
+        .decoracion-2 { top: 30%; right: 10%; content: '✝️'; }
+        .decoracion-3 { bottom: 20%; left: 10%; content: '🕯️'; }
+        .decoracion-4 { bottom: 25%; right: 8%; content: '👑'; }
+
         .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             max-width: 450px;
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border: 2px solid rgba(255, 220, 0, 0.3);
+            position: relative;
+            z-index: 1;
         }
+
+        /* 🎖️ Borde decorativo dorado */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #FFDC00, #FFA500, #FFDC00);
+            border-radius: 25px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
         .logo {
-            width: 100px;
-            height: 100px;
-            background-color: white;
+            width: 110px;
+            height: 110px;
+            background: linear-gradient(135deg, #FFDC00 0%, #FFA500 100%);
             border-radius: 50%;
-            margin: 0 auto 20px;
+            margin: 0 auto 25px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #001f3f;
-            font-size: 40px;
+            font-size: 50px;
             font-weight: bold;
+            box-shadow: 0 0 30px rgba(255, 220, 0, 0.5);
+            border: 3px solid white;
         }
         
         /* 🌈 Animación de colores para FELICITACIONES */
@@ -87,8 +162,9 @@
             color: #fff;
             line-height: 1.5;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 10px;
+            border: 1px solid rgba(255, 220, 0, 0.2);
         }
         
         .cpnb-title {
@@ -103,9 +179,16 @@
             padding: 12px;
             margin: 10px 0;
             border-radius: 8px;
-            border: none;
+            border: 2px solid rgba(255, 220, 0, 0.3);
             font-size: 16px;
             text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            color: #001f3f;
+        }
+        input:focus {
+            outline: none;
+            border-color: #FFDC00;
+            box-shadow: 0 0 15px rgba(255, 220, 0, 0.5);
         }
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
@@ -117,18 +200,28 @@
         button {
             width: 100%;
             padding: 15px;
-            background-color: #FF4136;
+            background: linear-gradient(135deg, #FF4136 0%, #FF9500 100%);
             color: white;
-            border: none;
+            border: 2px solid rgba(255, 255, 255, 0.5);
             border-radius: 8px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
             margin-top: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
-        button:hover { transform: scale(1.05); background-color: #ff2b1f; }
-        button:disabled { background-color: #999; cursor: not-allowed; transform: none; }
+        button:hover { 
+            transform: scale(1.05); 
+            background: linear-gradient(135deg, #FF2B1F 0%, #FF8800 100%);
+            box-shadow: 0 0 20px rgba(255, 65, 54, 0.6);
+        }
+        button:disabled { 
+            background: linear-gradient(135deg, #999 0%, #666 100%); 
+            cursor: not-allowed; 
+            transform: none;
+            box-shadow: none;
+        }
 
         /* 🔗 Redes sociales */
         .social-icons {
@@ -142,10 +235,11 @@
             color: white;
             transition: all 0.3s ease;
             text-decoration: none;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
         }
         .social-icons a:hover {
-            transform: scale(1.3);
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            transform: scale(1.3) rotate(5deg);
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
         }
         .social-icons .instagram:hover { color: #E1306C; }
         .social-icons .facebook:hover { color: #1877F2; }
@@ -158,13 +252,14 @@
         .show { display: block !important; }
         
         .error-msg {
-            color: #ff8585;
+            color: #ffcccc;
             display: none;
             margin-top: 10px;
             font-size: 0.9rem;
-            background: rgba(255, 65, 54, 0.2);
+            background: rgba(255, 65, 54, 0.3);
             padding: 10px;
             border-radius: 8px;
+            border: 1px solid rgba(255, 85, 85, 0.5);
         }
         
         .participante-number {
@@ -172,10 +267,58 @@
             font-weight: 700;
             color: #2ECC40;
             margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* 🕊️ Banner superior Semana Santa */
+        .banner-semana-santa {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, rgba(75, 0, 130, 0.8), rgba(138, 43, 226, 0.8), rgba(75, 0, 130, 0.8));
+            padding: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFDC00;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 100;
+            border-bottom: 2px solid #FFDC00;
+        }
+        
+        .banner-semana-santa i {
+            margin: 0 10px;
+            animation: brillar 2s infinite;
+        }
+        
+        @keyframes brillar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Ajuste para el banner */
+        body {
+            padding-top: 60px;
         }
     </style>
 </head>
 <body>
+
+    <!-- 🕊️ Banner superior -->
+    <div class="banner-semana-santa">
+        <i class="fas fa-cross"></i>
+        SEMANA SANTA 2026
+        <i class="fas fa-dove"></i>
+        ZULIA
+        <i class="fas fa-cross"></i>
+    </div>
+
+    <!-- ✨ Elementos decorativos -->
+    <div class="decoracion decoracion-1">🙏</div>
+    <div class="decoracion decoracion-2">✝️</div>
+    <div class="decoracion decoracion-3">🕯️</div>
+    <div class="decoracion decoracion-4">👑</div>
 
     <div class="container">
         <!-- LOGO -->
@@ -199,12 +342,12 @@
             <p id="error-msg" class="error-msg"></p>
         </div>
 
-        <!-- ✅ SECCIÓN DE ÉXITO (CORREGIDA) -->
+        <!-- ✅ SECCIÓN DE ÉXITO -->
         <div id="mensaje-exito" class="hidden">
             <!-- 🌈 FELICITACIONES animado y GRANDE -->
             <div class="felicidades-animado">¡FELICITACIONES!</div>
             
-            <!-- 🔢 Número de participante (MISMO que el contador) -->
+            <!-- 🔢 Número de participante -->
             <p class="participante-number" id="numero-participante">Eres el participante #...</p>
             
             <!-- 🎁 Subtítulo de premios -->
@@ -238,7 +381,7 @@
         // ========================================
         // ⚙️ CONFIGURACIÓN - EDITA ESTO
         // ========================================
-              const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
+            const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqcHVrZnN4ZHVxdGdiaHRnaWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTI3MjcsImV4cCI6MjA5MDE4ODcyN30.whpdkHn0OjJHPxbzZjgEwsBD4tKtN-_hxN8VGtDW4SU';
         
         // ========================================
@@ -276,7 +419,6 @@
 
                 if (updateError) throw updateError;
 
-                // Actualizar SOLO la pantalla de formulario
                 document.getElementById('contador').innerText = `Eres el visitante #${contadorActual}`;
                 
                 console.log('✅ Contador actualizado:', contadorActual);
@@ -298,7 +440,6 @@
             const errorMsg = document.getElementById('error-msg');
             const btn = document.getElementById('btnEnviar');
             
-            // Validar cédula: exactamente 8 dígitos
             if (!/^\d{8}$/.test(cedula)) {
                 errorMsg.innerText = "⚠️ La cédula debe tener exactamente 8 dígitos numéricos.";
                 errorMsg.style.display = 'block';
@@ -334,13 +475,10 @@
                 } else {
                     console.log('✅ Registro exitoso');
                     
-                    // 🎉 ÉXITO: Confeti
                     lanzarConfeti();
                     
-                    // ✅ Actualizar el número de participante con el MISMO contador
                     document.getElementById('numero-participante').innerText = `Eres el participante #${contadorActual}`;
                     
-                    // ✅ OCULTAR formulario y MOSTRAR mensaje de éxito
                     document.getElementById('formulario-section').classList.add('hidden');
                     document.getElementById('formulario-section').style.display = 'none';
                     document.getElementById('mensaje-exito').classList.remove('hidden');
