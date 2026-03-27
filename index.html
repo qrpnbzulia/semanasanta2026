@@ -66,16 +66,24 @@
         h2 { font-size: 1.3rem; margin-bottom: 20px; font-weight: 400; }
         
         .subtitulo-premio {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            margin: 20px 0 15px;
+            margin: 15px 0 10px;
             color: #FFDC00;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
+        .semana-santa {
+            font-size: 1.1rem;
+            color: #2ECC40;
+            font-weight: 600;
+            display: block;
+            margin-top: 5px;
+        }
+        
         .mensaje-cpnb {
             font-size: 1rem;
-            margin: 25px 0 20px;
+            margin: 20px 0 15px;
             color: #fff;
             line-height: 1.5;
             padding: 15px;
@@ -86,7 +94,8 @@
         .cpnb-title {
             font-weight: 700;
             color: #FFDC00;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            margin-bottom: 5px;
         }
 
         input {
@@ -142,9 +151,11 @@
         .social-icons .facebook:hover { color: #1877F2; }
         .social-icons .tiktok:hover { color: #00f2ea; }
 
-        #mensaje-exito { display: none; }
+        /* ✅ CLASES PARA MOSTRAR/OCULTAR */
         #formulario-section { display: block; }
+        #mensaje-exito { display: none; }
         .hidden { display: none !important; }
+        .show { display: block !important; }
         
         .error-msg {
             color: #ff8585;
@@ -156,11 +167,11 @@
             border-radius: 8px;
         }
         
-        .semana-santa {
-            font-size: 1.2rem;
+        .participante-number {
+            font-size: 1.8rem;
+            font-weight: 700;
             color: #2ECC40;
-            font-weight: 600;
-            margin-top: 5px;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -188,16 +199,17 @@
             <p id="error-msg" class="error-msg"></p>
         </div>
 
-        <!-- ✅ SECCIÓN DE ÉXITO -->
+        <!-- ✅ SECCIÓN DE ÉXITO (CORREGIDA) -->
         <div id="mensaje-exito" class="hidden">
             <!-- 🌈 FELICITACIONES animado y GRANDE -->
             <div class="felicidades-animado">¡FELICITACIONES!</div>
             
-            <h1 id="contador-exito">Eres el visitante #...</h1>
+            <!-- 🔢 Número de participante (MISMO que el contador) -->
+            <p class="participante-number" id="numero-participante">Eres el participante #...</p>
             
             <!-- 🎁 Subtítulo de premios -->
             <p class="subtitulo-premio">
-                🎁 Estás participando por grandes premios<br>
+                🎁 Estás participando por grandes premios
                 <span class="semana-santa">esta Semana Santa 2026</span>
             </p>
             
@@ -226,13 +238,14 @@
         // ========================================
         // ⚙️ CONFIGURACIÓN - EDITA ESTO
         // ========================================
-        const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
+              const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqcHVrZnN4ZHVxdGdiaHRnaWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTI3MjcsImV4cCI6MjA5MDE4ODcyN30.whpdkHn0OjJHPxbzZjgEwsBD4tKtN-_hxN8VGtDW4SU';
         
         // ========================================
         // 🚀 INICIALIZACIÓN
         // ========================================
         let supabaseClient;
+        let contadorActual = 0;
 
         try {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -254,24 +267,24 @@
 
                 if (error) throw error;
 
-                const nuevasVisitas = (data?.visitas || 0) + 1;
+                contadorActual = (data?.visitas || 0) + 1;
                 
                 const { error: updateError } = await supabaseClient
                     .from('contador_visitas')
-                    .update({ visitas: nuevasVisitas })
+                    .update({ visitas: contadorActual })
                     .eq('id', 1);
 
                 if (updateError) throw updateError;
 
-                document.getElementById('contador').innerText = `Eres el visitante #${nuevasVisitas}`;
-                document.getElementById('contador-exito').innerText = `Eres el visitante #${nuevasVisitas}`;
+                // Actualizar SOLO la pantalla de formulario
+                document.getElementById('contador').innerText = `Eres el visitante #${contadorActual}`;
                 
-                console.log('✅ Contador actualizado:', nuevasVisitas);
+                console.log('✅ Contador actualizado:', contadorActual);
                 
             } catch (err) {
                 console.error('❌ Error en contador:', err);
-                document.getElementById('contador').innerText = "Eres el visitante #1,000+";
-                document.getElementById('contador-exito').innerText = "Eres el visitante #1,000+";
+                contadorActual = Math.floor(Math.random() * 500) + 1000;
+                document.getElementById('contador').innerText = `Eres el visitante #${contadorActual}`;
             }
         }
 
@@ -320,11 +333,20 @@
                     btn.disabled = false;
                 } else {
                     console.log('✅ Registro exitoso');
-                    // ÉXITO: Confeti + cambiar pantalla
+                    
+                    // 🎉 ÉXITO: Confeti
                     lanzarConfeti();
+                    
+                    // ✅ Actualizar el número de participante con el MISMO contador
+                    document.getElementById('numero-participante').innerText = `Eres el participante #${contadorActual}`;
+                    
+                    // ✅ OCULTAR formulario y MOSTRAR mensaje de éxito
                     document.getElementById('formulario-section').classList.add('hidden');
+                    document.getElementById('formulario-section').style.display = 'none';
                     document.getElementById('mensaje-exito').classList.remove('hidden');
-                    cargarVisitas();
+                    document.getElementById('mensaje-exito').style.display = 'block';
+                    
+                    console.log('✅ Pantalla de éxito mostrada');
                 }
             } catch (err) {
                 console.error('❌ Error inesperado:', err);
