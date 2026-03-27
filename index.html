@@ -6,7 +6,7 @@
     <title>Gran Sorteo</title>
     <!-- Librería para el Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Librería de Supabase (Solo una vez) -->
+    <!-- Librería de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Iconos para redes sociales -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -25,7 +25,6 @@
             align-items: center;
             justify-content: center;
         }
-
         .container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -36,7 +35,6 @@
             width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.18);
         }
-
         .logo {
             width: 100px;
             height: 100px;
@@ -50,11 +48,9 @@
             font-size: 40px;
             font-weight: bold;
         }
-
         h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
         h2 { font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; }
         h3 { font-size: 1rem; margin-top: 30px; color: #FFDC00; }
-
         input {
             width: 90%;
             padding: 12px;
@@ -63,7 +59,6 @@
             border: none;
             font-size: 16px;
         }
-
         button {
             width: 100%;
             padding: 15px;
@@ -77,9 +72,7 @@
             transition: transform 0.2s;
             margin-top: 10px;
         }
-
         button:hover { transform: scale(1.05); background-color: #ff2b1f; }
-
         .social-icons {
             margin-top: 30px;
             font-size: 2rem;
@@ -90,10 +83,8 @@
             transition: color 0.3s;
         }
         .social-icons a:hover { color: #FFDC00; }
-
         #mensaje-exito { display: none; }
         #formulario-section { display: block; }
-        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -121,7 +112,7 @@
             <p id="error-msg" style="color: #ff8585; display:none; margin-top:10px;"></p>
         </div>
 
-        <!-- SECCIÓN DE ÉXITO (OCULTA AL INICIO) -->
+        <!-- SECCIÓN DE ÉXITO -->
         <div id="mensaje-exito" class="hidden">
             <h1 style="color: #2ECC40;">¡FELICITACIONES!</h1>
             <p style="font-size: 1.2rem;">Estás participando por grandes premios 🎁</p>
@@ -135,18 +126,18 @@
         </div>
     </div>
 
-    <!-- ÚNICO BLOQUE DE SCRIPT -->
+    <!-- SCRIPT PRINCIPAL -->
     <script>
-        // --- CONFIGURACIÓN ---
+        // --- CONFIGURACIÓN SUPABASE ---
         const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqcHVrZnN4ZHVxdGdiaHRnaWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTI3MjcsImV4cCI6MjA5MDE4ODcyN30.whpdkHn0OjJHPxbzZjgEwsBD4tKtN-_hxN8VGtDW4SU';
         
-        // Declaramos la variable una sola vez
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // ✅ Usamos 'supabaseClient' para evitar conflictos
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // 1. Cargar Contador de Visitas
         async function cargarVisitas() {
-            let { data: visitaData, error: visitError } = await supabase
+            let {  visitaData, error: visitError } = await supabaseClient
                 .from('contador_visitas')
                 .select('visitas')
                 .eq('id', 1)
@@ -157,14 +148,12 @@
                 return;
             }
 
-            // Actualizamos el contador en la DB +1
             const nuevasVisitas = visitaData.visitas + 1;
-            await supabase.from('contador_visitas').update({ visitas: nuevasVisitas }).eq('id', 1);
-
+            await supabaseClient.from('contador_visitas').update({ visitas: nuevasVisitas }).eq('id', 1);
             document.getElementById('contador').innerText = `Eres el visitante #${nuevasVisitas}`;
         }
 
-        // 2. Manejar el Envío del Formulario
+        // 2. Manejar Envío del Formulario
         document.getElementById('miFormulario').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.querySelector('button');
@@ -178,13 +167,11 @@
             const apellido = document.getElementById('apellido').value;
             const cedula = document.getElementById('cedula').value;
 
-            // Intentar insertar en Supabase
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('participantes')
                 .insert([{ nombre, apellido, cedula }]);
 
             if (error) {
-                // Si hay error, revisamos si es por cédula duplicada
                 if (error.code === '23505') { 
                     errorMsg.innerText = "Esta cédula ya ha sido registrada.";
                     errorMsg.style.display = 'block';
@@ -195,7 +182,6 @@
                 btn.innerText = "ENVIAR";
                 btn.disabled = false;
             } else {
-                // ÉXITO: Mostrar confeti y cambiar pantalla
                 lanzarConfeti();
                 document.getElementById('formulario-section').classList.add('hidden');
                 document.getElementById('mensaje-exito').classList.remove('hidden');
@@ -207,14 +193,9 @@
             var duration = 3 * 1000;
             var animationEnd = Date.now() + duration;
             var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
             var interval = setInterval(function() {
                 var timeLeft = animationEnd - Date.now();
-
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-
+                if (timeLeft <= 0) return clearInterval(interval);
                 var particleCount = 50 * (timeLeft / duration);
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
             }, 250);
