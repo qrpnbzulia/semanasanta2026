@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gran Sorteo</title>
-    <!-- Librería para el Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Librería de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Iconos para redes sociales -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         body {
             background: linear-gradient(135deg, #001f3f 0%, #0074D9 100%);
@@ -48,8 +44,6 @@
             font-size: 40px;
             font-weight: bold;
         }
-        
-        /* 🔥 Animación de colores para FELICITACIONES */
         .felicidades-animado {
             font-size: 2.8rem;
             font-weight: 800;
@@ -64,11 +58,9 @@
             75% { color: #0074D9; }
             100% { color: #B10DC9; }
         }
-
         h1 { font-size: 2.2rem; margin: 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
         h2 { font-size: 1.2rem; margin-bottom: 20px; font-weight: 300; }
         h3 { font-size: 1rem; margin: 25px 0 15px; color: #FFDC00; }
-
         input {
             width: 90%;
             padding: 12px;
@@ -83,10 +75,7 @@
             -webkit-appearance: none;
             margin: 0;
         }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-
+        input[type=number] { -moz-appearance: textfield; }
         button {
             width: 100%;
             padding: 15px;
@@ -101,8 +90,7 @@
             margin-top: 10px;
         }
         button:hover { transform: scale(1.05); background-color: #ff2b1f; }
-
-        /* 🔗 Redes sociales */
+        button:disabled { background-color: #999; cursor: not-allowed; transform: none; }
         .social-icons {
             margin-top: 25px;
             font-size: 2.5rem;
@@ -123,15 +111,27 @@
         .social-icons .instagram:hover { color: #E1306C; }
         .social-icons .facebook:hover { color: #1877F2; }
         .social-icons .tiktok:hover { color: #00f2ea; }
-
         #mensaje-exito { display: none; }
         #formulario-section { display: block; }
         .hidden { display: none !important; }
-        
-        .premio-text {
-            font-size: 1.3rem;
-            margin: 15px 0;
-            color: #fff;
+        .premio-text { font-size: 1.3rem; margin: 15px 0; color: #fff; }
+        .error-box {
+            background: rgba(255, 65, 54, 0.2);
+            border: 1px solid #ff8585;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            color: #ffcccc;
+        }
+        .status-box {
+            background: rgba(46, 204, 64, 0.2);
+            border: 1px solid #2ecc40;
+            border-radius: 8px;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 0.85rem;
+            color: #d4edda;
         }
     </style>
 </head>
@@ -139,9 +139,11 @@
 
     <div class="container">
         <!-- LOGO -->
-        <div class="logo">
-            <i class="fas fa-gift"></i>
-        </div>
+        <div class="logo"><i class="fas fa-gift"></i></div>
+
+        <!-- ESTADO DE CONEXIÓN (para depuración) -->
+        <div id="status" class="status-box" style="display:none;">✅ Conectado a Supabase</div>
+        <div id="error-global" class="error-box" style="display:none;"></div>
 
         <!-- CONTADOR DE VISITAS -->
         <h1 id="contador">Eres el visitante #...</h1>
@@ -153,95 +155,179 @@
             <form id="miFormulario">
                 <input type="text" id="nombre" placeholder="Nombre" required maxlength="50">
                 <input type="text" id="apellido" placeholder="Apellido" required maxlength="50">
-                <!-- ✅ Cédula: máximo 8 dígitos numéricos -->
                 <input type="number" id="cedula" placeholder="Cédula (8 dígitos)" required maxlength="8" pattern="\d{8}" title="Ingresa exactamente 8 dígitos numéricos">
-                <button type="submit">ENVIAR</button>
+                <button type="submit" id="btnEnviar">ENVIAR</button>
             </form>
             <p id="error-msg" style="color: #ff8585; display:none; margin-top:10px; font-size: 0.9rem;"></p>
         </div>
 
-        <!-- ✅ SECCIÓN DE ÉXITO (con FELICITACIONES animado) -->
+        <!-- SECCIÓN DE ÉXITO -->
         <div id="mensaje-exito" class="hidden">
-            <!-- ✨ FELICITACIONES con animación de colores -->
             <div class="felicidades-animado">¡FELICITACIONES!</div>
-            
             <h1 id="contador-exito">Eres el visitante #...</h1>
-            
             <p class="premio-text">🎁 Estás participando por grandes premios</p>
-            
             <h3>NO OLVIDES SEGUIRNOS EN NUESTRAS REDES</h3>
-            
-            <!-- 🔗 Logos de redes sociales con enlaces -->
             <div class="social-icons">
-                <a href="https://instagram.com/TU_USUARIO" target="_blank" class="instagram" title="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://facebook.com/TU_USUARIO" target="_blank" class="facebook" title="Facebook">
-                    <i class="fab fa-facebook"></i>
-                </a>
-                <a href="https://tiktok.com/@TU_USUARIO" target="_blank" class="tiktok" title="TikTok">
-                    <i class="fab fa-tiktok"></i>
-                </a>
+                <a href="https://instagram.com/TU_USUARIO" target="_blank" class="instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://facebook.com/TU_USUARIO" target="_blank" class="facebook" title="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://tiktok.com/@TU_USUARIO" target="_blank" class="tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT PRINCIPAL -->
     <script>
-        // --- CONFIGURACIÓN SUPABASE ---
-              const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqcHVrZnN4ZHVxdGdiaHRnaWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTI3MjcsImV4cCI6MjA5MDE4ODcyN30.whpdkHn0OjJHPxbzZjgEwsBD4tKtN-_hxN8VGtDW4SU';;
+        // ========================================
+        // ⚙️ CONFIGURACIÓN - EDITA ESTO
+        // ========================================
+        const SUPABASE_URL = 'https://jjpukfsxduqtgbhtgiba.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqcHVrZnN4ZHVxdGdiaHRnaWJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MTI3MjcsImV4cCI6MjA5MDE4ODcyN30.whpdkHn0OjJHPxbzZjgEwsBD4tKtN-_hxN8VGtDW4SU';
         
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // ========================================
+        // 🚀 INICIALIZACIÓN
+        // ========================================
+        let supabaseClient;
+        const statusEl = document.getElementById('status');
+        const errorGlobalEl = document.getElementById('error-global');
 
-        // 1. Cargar Contador de Visitas
+        try {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log('✅ Cliente Supabase creado');
+            statusEl.style.display = 'block';
+        } catch (e) {
+            console.error('❌ Error creando cliente Supabase:', e);
+            errorGlobalEl.innerText = '⚠️ Error de configuración. Revisa la consola (F12).';
+            errorGlobalEl.style.display = 'block';
+        }
+
+        // ========================================
+        // 📊 CONTADOR DE VISITAS (versión simplificada)
+        // ========================================
         async function cargarVisitas() {
             try {
-                const { data, error } = await supabaseClient
-                    .rpc('incrementar_contador');
-                
+                // 1. Leer valor actual
+                const {  data, error } = await supabaseClient
+                    .from('contador_visitas')
+                    .select('visitas')
+                    .eq('id', 1)
+                    .single();
+
                 if (error) throw error;
+
+                // 2. Incrementar y actualizar
+                const nuevasVisitas = (data?.visitas || 0) + 1;
                 
-                // Actualizar contador en ambas secciones
-                document.getElementById('contador').innerText = `Eres el visitante #${data}`;
-                document.getElementById('contador-exito').innerText = `Eres el visitante #${data}`;
+                const { error: updateError } = await supabaseClient
+                    .from('contador_visitas')
+                    .update({ visitas: nuevasVisitas })
+                    .eq('id', 1);
+
+                if (updateError) throw updateError;
+
+                // 3. Mostrar en pantalla
+                document.getElementById('contador').innerText = `Eres el visitante #${nuevasVisitas}`;
+                document.getElementById('contador-exito').innerText = `Eres el visitante #${nuevasVisitas}`;
+                
+                console.log('✅ Contador actualizado:', nuevasVisitas);
+                
             } catch (err) {
-                console.error('Error en contador:', err);
-                const aleatorio = Math.floor(Math.random() * 500) + 1000;
-                document.getElementById('contador').innerText = `Eres el visitante #${aleatorio}`;
-                document.getElementById('contador-exito').innerText = `Eres el visitante #${aleatorio}`;
+                console.error('❌ Error en contador:', err);
+                // Fallback visual
+                document.getElementById('contador').innerText = "Eres el visitante #1,000+";
+                document.getElementById('contador-exito').innerText = "Eres el visitante #1,000+";
             }
         }
 
-        // 2. Manejar Envío del Formulario
+        // ========================================
+        // 📝 ENVÍO DEL FORMULARIO
+        // ========================================
         document.getElementById('miFormulario').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const cedula = document.getElementById('cedula').value;
+            const cedula = document.getElementById('cedula').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            const btn = document.getElementById('btnEnviar');
             
-            // ✅ Validar que la cédula tenga exactamente 8 dígitos
+            // Validar cédula: exactamente 8 dígitos
             if (!/^\d{8}$/.test(cedula)) {
-                const errorMsg = document.getElementById('error-msg');
                 errorMsg.innerText = "⚠️ La cédula debe tener exactamente 8 dígitos numéricos.";
                 errorMsg.style.display = 'block';
                 return;
             }
             
-            const btn = document.querySelector('button');
-            const errorMsg = document.getElementById('error-msg');
-            
+            // Estado de envío
             btn.innerText = "Enviando...";
             btn.disabled = true;
             errorMsg.style.display = 'none';
 
-            const nombre = document.getElementById('nombre').value;
-            const apellido = document.getElementById('apellido').value;
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
 
             try {
+                console.log('📤 Enviando datos:', { nombre, apellido, cedula: '***' });
+                
                 const { data, error } = await supabaseClient
                     .from('participantes')
-                    .insert([{ nombre, apellido, cedula }]);
+                    .insert([{ nombre, apellido, cedula }])
+                    .select();
 
                 if (error) {
+                    console.error('❌ Error Supabase:', error);
+                    
                     if (error.code === '23505') { 
-                       
+                        errorMsg.innerText = "⚠️ Esta cédula ya está registrada. ¡Gracias por participar!";
+                    } else if (error.message?.includes('permission')) {
+                        errorMsg.innerText = "❌ Error de permisos. Contacta al administrador.";
+                    } else {
+                        errorMsg.innerText = `❌ Error: ${error.message || 'Intenta nuevamente'}`;
+                    }
+                    errorMsg.style.display = 'block';
+                    btn.innerText = "ENVIAR";
+                    btn.disabled = false;
+                } else {
+                    console.log('✅ Registro exitoso:', data);
+                    // ÉXITO: Confeti + cambiar pantalla
+                    lanzarConfeti();
+                    document.getElementById('formulario-section').classList.add('hidden');
+                    document.getElementById('mensaje-exito').classList.remove('hidden');
+                    // Actualizar contador en pantalla de éxito
+                    cargarVisitas();
+                }
+            } catch (err) {
+                console.error('❌ Error inesperado:', err);
+                errorMsg.innerText = "❌ Ocurrió un error. Revisa tu conexión.";
+                errorMsg.style.display = 'block';
+                btn.innerText = "ENVIAR";
+                btn.disabled = false;
+            }
+        });
+
+        // ========================================
+        // 🎉 CONFETI
+        // ========================================
+        function lanzarConfeti() {
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: Math.random(), y: Math.random() - 0.2 } 
+                }));
+            }, 250);
+        }
+
+        // ========================================
+        // 🔄 INICIAR
+        // ========================================
+        if (supabaseClient) {
+            cargarVisitas();
+        } else {
+            document.getElementById('contador').innerText = "Esperando configuración...";
+        }
+    </script>
+</body>
+</html>
